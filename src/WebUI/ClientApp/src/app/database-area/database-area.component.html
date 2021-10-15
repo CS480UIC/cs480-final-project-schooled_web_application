@@ -1,0 +1,87 @@
+<div class="container">
+  <div class="header">
+    <h2 id="title">Schooled </h2><h3 id="subTitle"> (Admin Backend)</h3>
+    <nav>
+      <input class="button" type="button" value="View Table" (click)="pageState = 'view'">
+      <input class="button" type="button" value="Create Table" (click)="pageState = 'create'">
+      <input  [disabled]="notImplemented"  class="button" type="button" value="Add Data" (click)="pageState = 'addData'">
+      <input class="button" type="button" value="Remove Table" (click)="pageState = 'remove'">
+      <input [disabled]="notImplemented" class="button" type="button" value="Edit Table" (click)="pageState = 'edit'">
+      <input id="logoutButton" type="button" value="Logout" (click)="logout()">
+    </nav>
+  </div>
+  <div class="page" *ngIf="pageState==='view'">
+    <div class="content">
+      <h1>View Tables</h1>
+      <input type="text" #tableName placeholder="Table Name Here"><br>
+      <input type="text" #itemNumber placeholder="Num Rows"><br>
+      <input type="button" value="View Table" (click)="viewTable(tableName.value, itemNumber.value)"><br />
+      <div id="tableLayout" *ngIf="searchReady">
+        <h4>Table: {{currentTableName}}</h4>
+        <div *ngFor="let colName of colNames;let i = index">
+          <p class="tableCol">{{colName}} ({{colTypes[i]}})</p>
+        </div>
+      </div>
+      <div id="queryLayout" *ngIf="searchReady">
+        <h4>{{currentTableName}}: Data</h4>
+        <table mat-table [dataSource]="currentData">
+          <tr mat-row>
+            <th *ngFor="let colName of colNames">{{colName}}</th>
+          </tr>
+          <tr mat-row *ngFor="let rowData of currentData">
+            <th *ngFor="let colData of rowData.cols">{{colData}}</th>
+          </tr>
+        </table>
+        <!--<table>
+          <head *ngFor="let colName of colNames;let i = index">
+          <th>{{colName}}</th>
+          </head>
+          <body>
+          <tr *ngFor="let hero of heroes">
+            <td>{{hero.name}}</td>
+          </tr>
+          </body>
+        </table>-->
+      </div>
+    </div>
+  </div>
+  <div class="page" *ngIf="pageState==='create'">
+    <div class="content">
+      <h1>Create Table</h1>
+      <input type="text" #tableName placeholder="Table Name Here"><br>
+      <div *ngFor="let in of counter(numCols) ;let i = index">
+        <input type="text" [(ngModel)]="cols[i]" placeholder="Column {{i}}"><br>
+      </div>
+      <input type="button" value="Add Column" (click)="numCols = numCols + 1"><br>
+      <input type="button" value="Remove Column" (click)="removeCol()"><br>
+      <input type="button" value="Create Table" (click)="createTable(tableName.value)">
+    </div>
+  </div>
+
+  <div class="page" *ngIf="pageState==='addData'">
+    <div class="content">
+      <h1>Add Data</h1>
+      <input type="text" #tableName placeholder="Table Name Here"><br>
+      <input type="button" value="Data Here" >
+    </div>
+  </div>
+
+  <div class="page" *ngIf="pageState==='remove'">
+    <div class="content">
+      <h1>Remove Table</h1>
+      <input type="text" #tableName placeholder="Table Name Here"><br>
+      <input type="button" value="Delete Table" (click)="deleteTable(tableName.value)">
+    </div>
+  </div>
+  <div class="page" *ngIf="pageState==='edit'">
+    <div class="content">
+      <h1>Edit Table</h1>
+      <input type="text" #tableName placeholder="Table Name Here"><br>
+      <input type="text" #alterType placeholder="Alter Type"><br>
+      <input type="text" #attributeName placeholder="Attribute Name"><br>
+      <input type="text" #attributeType placeholder="Attribute Type"><br>
+      <input type="text" #attributeRules placeholder="Attribute Rules"><br>
+      <input type="button" value="Edit Table">
+    </div>
+  </div>
+</div>

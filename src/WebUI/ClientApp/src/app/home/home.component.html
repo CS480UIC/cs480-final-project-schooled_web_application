@@ -1,2 +1,30 @@
-<h1>Welcome to Schooled</h1>
-<p>Here you can obtain and share knowledge from around the world or just study for an up coming test.</p>
+<div class="d-flex justify-content-center container-fluid">
+  <div class="boarder position-ab left-0 top--10 z-index-0"></div>
+  <div class="login-form justify-content-center position-ab top--10 boardColor mh-110 w-98 board"></div>
+  <div class="boarder position-ab right-0 top--10 z-index-0"></div>
+</div>
+<div class="container">
+  <form *ngIf="!registrationForm">
+    <p>Welcome To Schooled</p>
+    <h2 *ngIf="isAdminLogin">Admin Login</h2>
+    <input type="text" #username (keyup)="checkUsername(username.value)" placeholder="Username"><br>
+    <input type="password" #password (keyup)="checkPassword(password.value)" placeholder="Password"><br>
+    <input [disabled]="!usernameBad || !passwordBad" type="button" value="Sign in" (click)="login(username.value, password.value)"><br>
+    <input class="button" type="button" value="Register" (click)="routeRegister()">
+    <input class="button" [disabled]="isAdminLogin" type="button" value="Admin Login" (click)="isAdminLogin = !isAdminLogin">
+    <input class="button" [disabled]="!isAdminLogin" type="button" value="Normal Login" (click)="isAdminLogin = !isAdminLogin">
+    <!--<input class="button" type="button" value="Forgot Password" (click)="forgotPassword()">-->
+  </form>
+
+  <form *ngIf="registrationForm">
+    <p>Register</p>
+    <input type="text" #username (keyup)="checkUsername(username.value)" placeholder="Username"><br>
+    <input type="password" #password (keyup)="checkPassword(password.value)" placeholder="Password"><br>
+    <input type="password" #rePassword (keyup)="checkPassword(password.value)" placeholder="Repeat Password"><br>
+    <input type="email" #email placeholder="Email"><br>
+    <input type="text" #phoneNumber placeholder="Phone (Not Required)"><br>
+    <input type="password" #token placeholder="Token (Not Required)"><br>
+    <input class="button" type="button" value="Back" (click)="routeRegister()">
+    <input class="button" type="button" value="Register" (click)="register(username.value, password.value, email.value, phoneNumber.value, token.value)">
+  </form>
+</div>
