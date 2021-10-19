@@ -1,0 +1,42 @@
+<div class="d-flex justify-content-center container-fluid">
+  <div class="boarder position-ab left-0 top--10 z-index-0"></div>
+  <div class="login-form justify-content-center position-ab top--10 boardColor mh-110 w-98 board">
+    <div class="topBar">
+      <h2>Schooled</h2>
+      <nav>
+        <a (click)="logout()">Logout</a>
+        <a>{{account_username}} |</a>
+      </nav>
+    </div>
+    <div class="shelf_container">
+      <div class="notebooks">
+        <div *ngFor="let n of counter((page_number * max_books), current_number_of_books);" (resized)="testResize($event)" class="notebook-wrapper">
+          <div class="notebook-title-area">
+            <h4 class="notebook-title">Long Title {{n}}</h4>
+          </div>
+        </div>
+        <div class="notebook-wrapper" (click)="current_number_of_books = current_number_of_books + 1" >
+          <div class="notebook-title-area">
+            <h4 class="notebook-title add-resource">Add New Group</h4>
+          </div>
+        </div>
+      </div>
+      <div class="shelf"></div>
+      <div class="notebooks">
+      </div>
+      <div class="shelf"></div>
+      <div class="notebooks">
+      </div>
+      <div class="shelf"></div>
+    </div>
+    <div class="pageChanger">
+      <h4 class="enable" *ngIf="page_number != 0" (click)="page_number = page_number - 1"><== </h4>
+      <h4 class="disable" *ngIf="page_number == 0"><== </h4>
+      <h4 class="disable">{{ page_number + 1 }}</h4>
+      <h4 class="enable"  *ngIf="current_number_of_books >= ((page_number + 1) * max_books)" (click)="page_number = page_number + 1"> ==></h4>
+      <h4 class="disable" *ngIf="current_number_of_books < ((page_number + 1) * max_books)"> ==></h4>
+    </div>
+  </div>
+  <div class="boarder position-ab right-0 top--10 z-index-0"></div>
+</div>
+

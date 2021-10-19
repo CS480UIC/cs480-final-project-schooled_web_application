@@ -6,4 +6,9 @@
     <AssemblyName>CS_480_Project.Domain</AssemblyName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Entities\" />
+    <Folder Include="Events\" />
+  </ItemGroup>
+
 </Project>

@@ -34,7 +34,7 @@ namespace CS_480_Project.Application.Account.Commands.CreateAccount
                 var today = new DateTime().ToUniversalTime();
                 _dataBase.CreateConnection("localhost", "schooled_test", "danie_test", "applecandykiller", "");
                 var accountType = (request.Token == "shvi3") ? 1 : 0;
-                string sql = "INSERT INTO account (user_username, user_password, user_email, user_phone, user_creation_date, user_type, user_id) VALUES(@val1, @val2, @val3, @val4, @val5, @val6, @val7); ";
+                string sql = "INSERT INTO user (user_username, user_password, user_email, user_phone, user_creation_date, user_type, user_id, user_validated) VALUES(@val1, @val2, @val3, @val4, @val5, @val6, @val7, @val8); ";
                 MySqlCommand cmd = new MySqlCommand(sql, _dataBase.GetConnection());
                 cmd.Parameters.AddWithValue("@val1", request.Username);
                 cmd.Parameters.AddWithValue("@val2", ComputeSha256Hash(request.Password));
@@ -43,6 +43,7 @@ namespace CS_480_Project.Application.Account.Commands.CreateAccount
                 cmd.Parameters.AddWithValue("@val5", today);
                 cmd.Parameters.AddWithValue("@val6", accountType);
                 cmd.Parameters.AddWithValue("@val7", UID);
+                cmd.Parameters.AddWithValue("@val8", false);
                 await _dataBase.ExecuteNonQueryStatement(cmd);
 
                 if (accountType == 1)

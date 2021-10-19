@@ -10,36 +10,28 @@ using System.Threading.Tasks;
 
 namespace CS_480_Project.Application.Account.Queries
 {
-    public class AuthorizationCheckCommand : IRequest<int>
+    public class GetAccountNameByTokenCommand : IRequest<string>
     {
         public string UserUid { get; set; }
         public string Token { get; set; }
-        public Boolean isAdminArea { get; set; }
     }
 
-    public class AuthorizationCheckCommandHandler : IRequestHandler<AuthorizationCheckCommand, int>
+    public class GetAccountNameByTokenCommandHandler : IRequestHandler<GetAccountNameByTokenCommand, string>
     {
         private readonly IDatabaseService _dataBase;
 
-        public AuthorizationCheckCommandHandler(IDatabaseService dataBase)
+        public GetAccountNameByTokenCommandHandler(IDatabaseService dataBase)
         {
             _dataBase = dataBase;
         }
 
-        public async Task<int> Handle(AuthorizationCheckCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(GetAccountNameByTokenCommand request, CancellationToken cancellationToken)
         {
-            int responseCode = -1;
             try
             {
                 _dataBase.CreateConnection("localhost", "schooled_test", "danie_test", "applecandykiller", "");
-                string sql;
-
-                if (request.isAdminArea)
-                    sql = "SELECT user.user_id FROM user JOIN token WHERE token.token_token ='" + request.Token 
-                        + "' AND user.user_id = token.user_id AND user.user_type = 1;";
-                else
-                    sql = "SELECT user_id FROM token WHERE token_token='" + request.Token + "';";
-
+                string sql = "SELECT user.user_id, user.user_username FROM user JOIN token WHERE token.token_token ='" + request.Token
+                        + "' AND user.user_id = token.user_id;";
                 MySqlCommand cmd = new MySqlCommand(sql, _dataBase.GetConnection());
                 DbDataReader results = await _dataBase.ExecuteQueryStatement(cmd);
 
@@ -49,33 +41,29 @@ namespace CS_480_Project.Application.Account.Queries
                     var userId = results.GetString(0);
 
                     if (ComputeSha256Hash(userId).CompareTo(request.UserUid) == 0)
-                    {   
+                    {
+                        var username = results.GetString(1);
+
                         _dataBase.CloseConnection();
                         // User was found and valid for the area they are trying to access
-                        return 0;
+                        return username;
                     }
 
                     // Invalid userId & token combo invalid
                     _dataBase.CloseConnection();
-                    return -2;
+                    return String.Empty;
                 }
 
-                if (request.isAdminArea)
-                    // Invalid token for admin access
-                    responseCode = -4;
-                else
-                    // Token does not exist
-                    responseCode = -3;
-
                 _dataBase.CloseConnection();
-                return responseCode;
-            }catch(Exception e)
+                return String.Empty;
+            }
+            catch (Exception e)
             {
                 // Error with code
                 _dataBase.CloseConnection();
-                return responseCode;
+                return String.Empty;
             }
-            
+
         }
 
         static string ComputeSha256Hash(string rawData)

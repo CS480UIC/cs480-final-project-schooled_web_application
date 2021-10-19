@@ -1,10 +1,11 @@
-<div class="container">
+<app-loading *ngIf="loading"></app-loading>
+<div *ngIf="!loading" class="container">
   <div class="header">
     <h2 id="title">Schooled </h2><h3 id="subTitle"> (Admin Backend)</h3>
     <nav>
       <input class="button" type="button" value="View Table" (click)="pageState = 'view'">
       <input class="button" type="button" value="Create Table" (click)="pageState = 'create'">
-      <input  [disabled]="notImplemented"  class="button" type="button" value="Add Data" (click)="pageState = 'addData'">
+      <input [disabled]="notImplemented" class="button" type="button" value="Add Data" (click)="pageState = 'addData'">
       <input class="button" type="button" value="Remove Table" (click)="pageState = 'remove'">
       <input [disabled]="notImplemented" class="button" type="button" value="Edit Table" (click)="pageState = 'edit'">
       <input id="logoutButton" type="button" value="Logout" (click)="logout()">
@@ -62,7 +63,7 @@
     <div class="content">
       <h1>Add Data</h1>
       <input type="text" #tableName placeholder="Table Name Here"><br>
-      <input type="button" value="Data Here" >
+      <input type="button" value="Data Here">
     </div>
   </div>
 

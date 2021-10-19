@@ -1,6 +1,5 @@
 ﻿using CS_480_Project.Application.Common.Interfaces;
 using CS_480_Project.Domain.Common;
-using CS_480_Project.Domain.Entities;
 using CS_480_Project.Infrastructure.Identity;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
@@ -30,10 +29,6 @@ namespace CS_480_Project.Infrastructure.Persistence
             _domainEventService = domainEventService;
             _dateTime = dateTime;
         }
-
-        public DbSet<TodoItem> TodoItems { get; set; }
-
-        public DbSet<TodoList> TodoLists { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {

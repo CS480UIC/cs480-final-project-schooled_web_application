@@ -23,6 +23,8 @@
     <Folder Include="Account\Commands\DeleteAccount\" />
     <Folder Include="Account\Commands\UpdateAccount\" />
     <Folder Include="MySQLTable\Commands\UpdateTable\" />
+    <Folder Include="Tokens\Commands\DeleteToken\" />
+    <Folder Include="Tokens\Queries\" />
   </ItemGroup>
 
 </Project>

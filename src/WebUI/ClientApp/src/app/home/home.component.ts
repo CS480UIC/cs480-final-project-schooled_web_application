@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
     var retrievedObject = localStorage.getItem('userData');
     if (retrievedObject != null) {
       var userUid = JSON.parse(retrievedObject)['userUIN'];
-      var token = JSON.parse(retrievedObject)['userUIN'];
+      var token = JSON.parse(retrievedObject)['token'];
       if (userUid != null && token != null)
         this._router.navigateByUrl("database");
     }
@@ -40,6 +40,11 @@ export class HomeComponent implements OnInit {
         // Put the object into storage
         localStorage.setItem('userData', JSON.stringify(result));
         this._router.navigateByUrl("database");
+      }
+      else if (result != null && !this.isAdminLogin) {
+        // Put the object into storage
+        localStorage.setItem('userData', JSON.stringify(result));
+        this._router.navigateByUrl("app-user");
       }
 
       // Retrieve the object from storage

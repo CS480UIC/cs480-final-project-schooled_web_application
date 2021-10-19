@@ -1,7 +1,4 @@
-﻿using CS_480_Project.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Data.Common;
 
