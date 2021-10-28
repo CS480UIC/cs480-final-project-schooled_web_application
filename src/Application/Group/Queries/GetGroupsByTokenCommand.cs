@@ -7,75 +7,79 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using CS_480_Project.Application.Group.DTOs;
+using System.Collections.Generic;
 
-namespace CS_480_Project.Application.Account.Queries
+namespace CS_480_Project.Application.Group.Queries
 {
-    public class AuthorizationCheckCommand : IRequest<int>
+    public class GetGroupsByTokenCommand : IRequest<GroupsDTO>
     {
         public string UserUid { get; set; }
         public string Token { get; set; }
-        public Boolean IsAdminArea { get; set; }
     }
 
-    public class AuthorizationCheckCommandHandler : IRequestHandler<AuthorizationCheckCommand, int>
+    public class GetGroupsByTokenCommandHandler : IRequestHandler<GetGroupsByTokenCommand, GroupsDTO>
     {
         private readonly IDatabaseService _dataBase;
 
-        public AuthorizationCheckCommandHandler(IDatabaseService dataBase)
+        public GetGroupsByTokenCommandHandler(IDatabaseService dataBase)
         {
             _dataBase = dataBase;
         }
 
-        public async Task<int> Handle(AuthorizationCheckCommand request, CancellationToken cancellationToken)
+        public async Task<GroupsDTO> Handle(GetGroupsByTokenCommand request, CancellationToken cancellationToken)
         {
-            int responseCode = -1;
+            GroupsDTO resourceGroups = new GroupsDTO();
+
             try
             {
                 _dataBase.CreateConnection("localhost", "schooled_web_application", "danie_test", "applecandykiller", "");
-                string sql;
-
-                if (request.IsAdminArea)
-                    sql = "SELECT user.user_id FROM user JOIN token WHERE token.token_token ='" + request.Token 
-                        + "' AND user.user_id = token.user_id AND user.user_type = 1;";
-                else
-                    sql = "SELECT user_id FROM token WHERE token_token='" + request.Token + "';";
-
+                string sql = "SELECT token.user_id, resource_group.resource_group_id, resource_group.resource_group_name, resource_group.resource_group_description" +
+                    " FROM resource_group" +
+                    " JOIN group_member JOIN token JOIN group_role" +
+                    " WHERE token.token_token ='" + request.Token + "' AND token.user_id = group_member.user_id AND group_member.group_role_id = group_role.group_role_id" +
+                    " AND resource_group.resource_group_id = group_role.resource_group_id;";
                 MySqlCommand cmd = new MySqlCommand(sql, _dataBase.GetConnection());
                 DbDataReader results = await _dataBase.ExecuteQueryStatement(cmd);
 
+                resourceGroups = new GroupsDTO();
                 if (results.HasRows)
                 {
                     results.Read();
                     var userId = results.GetString(0);
 
                     if (ComputeSha256Hash(userId).CompareTo(request.UserUid) == 0)
-                    {   
+                    {
+                        do
+                        {
+                            GroupDTO newGroup = new GroupDTO();
+                            newGroup.Id = results.GetString(1);
+                            newGroup.Name = results.GetString(2);
+                            newGroup.Description = results.GetString(3);
+                            resourceGroups.ResourceGroups = new List<GroupDTO>();
+                            resourceGroups.ResourceGroups.Add(newGroup);
+                        } while (results.Read());
+
+                        // Invalid userId & token combo invalid
                         _dataBase.CloseConnection();
-                        // User was found and valid for the area they are trying to access
-                        return 0;
+                        return resourceGroups;
                     }
 
                     // Invalid userId & token combo invalid
                     _dataBase.CloseConnection();
-                    return -2;
+                    return null;
                 }
 
-                if (request.IsAdminArea)
-                    // Invalid token for admin access
-                    responseCode = -4;
-                else
-                    // Token does not exist
-                    responseCode = -3;
-
                 _dataBase.CloseConnection();
-                return responseCode;
-            }catch(Exception e)
+                return resourceGroups;
+            }
+            catch (Exception e)
             {
                 // Error with code
                 _dataBase.CloseConnection();
-                return responseCode;
+                return null;
             }
-            
+
         }
 
         static string ComputeSha256Hash(string rawData)

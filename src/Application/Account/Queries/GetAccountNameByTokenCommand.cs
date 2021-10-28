@@ -29,7 +29,7 @@ namespace CS_480_Project.Application.Account.Queries
         {
             try
             {
-                _dataBase.CreateConnection("localhost", "schooled_test", "danie_test", "applecandykiller", "");
+                _dataBase.CreateConnection("localhost", "schooled_web_application", "danie_test", "applecandykiller", "");
                 string sql = "SELECT user.user_id, user.user_username FROM user JOIN token WHERE token.token_token ='" + request.Token
                         + "' AND user.user_id = token.user_id;";
                 MySqlCommand cmd = new MySqlCommand(sql, _dataBase.GetConnection());

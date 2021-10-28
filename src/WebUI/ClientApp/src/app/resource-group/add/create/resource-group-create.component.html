@@ -1,0 +1,17 @@
+<div class="form">
+  <h2>Create Group</h2>
+  <h5>Group Name</h5>
+  <span class="p-float-label">
+    <input [(ngModel)]="groupName" id="float-input" type="text" pInputText>
+  </span>
+  <h5>Privacy Type</h5>
+  <div *ngFor="let category of categories" class="p-field-checkbox">
+    <p-radioButton [inputId]="category.key" name="category" [value]="category" [(ngModel)]="selectedCategory"></p-radioButton>
+    <label [for]="category.key">{{category.name}}</label>
+  </div><br /><br />
+  <h5>Description</h5>
+  <span class="p-float-label">
+    <textarea [(ngModel)]="groupDescription" id="float-input" rows="5" cols="30" pInputTextarea></textarea>
+  </span>
+  <button class="createGroup" [disabled]="groupName == null || groupName == ''" (click)="createNewGroup()">Create</button>
+ </div>

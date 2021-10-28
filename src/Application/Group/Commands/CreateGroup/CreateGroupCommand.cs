@@ -1,4 +1,5 @@
 ﻿using CS_480_Project.Application.Common.Interfaces;
+using CS_480_Project.Application.Group.DTOs;
 using MySql.Data.MySqlClient;
 using MediatR;
 using System.Threading;
@@ -7,53 +8,58 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace CS_480_Project.Application.Account.Commands.CreateAccount
+namespace CS_480_Project.Application.Group.Commands.CreateGroup
 {
-    public class CreateAccountCommand : IRequest<int>
+    public class CreateGroupCommand : IRequest<GroupDTO>
     {
-        public string Username { get; set; }
+        public string Name { get; set; }
+        public int PrivacyType { get; set; }
+        public string Description { get; set; }
         public string Password { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Email { get; set; }
-        public string Token { get; set; }
     }
 
-    public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, int>
+    public class CreateGroupCommandHandler : IRequestHandler<CreateGroupCommand, GroupDTO>
     {
         private readonly IDatabaseService _dataBase;
-        public CreateAccountCommandHandler(IDatabaseService dataBase)
+        public CreateGroupCommandHandler(IDatabaseService dataBase)
         {
             _dataBase = dataBase;
         }
 
-        public async Task<int> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
+        public async Task<GroupDTO> Handle(CreateGroupCommand request, CancellationToken cancellationToken)
         {
             try
             {
                 var UID = Guid.NewGuid().ToString();
                 var today = new DateTime().ToUniversalTime();
+                var password = request.Password == null || request.Password.CompareTo("") == 0 ? null : ComputeSha256Hash(request.Password);
+
                 _dataBase.CreateConnection("localhost", "schooled_web_application", "danie_test", "applecandykiller", "");
-                var accountType = (request.Token == "shvi3") ? 1 : 0;
-                string sql = "INSERT INTO user (user_username, user_password, user_email, user_phone, user_creation_date, user_type, user_id, user_validated) VALUES(@val1, @val2, @val3, @val4, @val5, @val6, @val7, @val8); ";
+                string sql = "INSERT INTO resource_group (resource_group_id, resource_group_name, resource_group_privacy_type, resource_group_password" +
+                    ", resource_group_creation_date, resource_group_description) VALUES(@val1, @val2, @val3, @val4, @val5, @val6); ";
                 MySqlCommand cmd = new MySqlCommand(sql, _dataBase.GetConnection());
-                cmd.Parameters.AddWithValue("@val1", request.Username);
-                cmd.Parameters.AddWithValue("@val2", ComputeSha256Hash(request.Password));
-                cmd.Parameters.AddWithValue("@val3", request.Email);
-                cmd.Parameters.AddWithValue("@val4", request.PhoneNumber == string.Empty ? null : Int32.Parse(request.PhoneNumber));
+                cmd.Parameters.AddWithValue("@val1", UID);
+                cmd.Parameters.AddWithValue("@val2", request.Name);
+                cmd.Parameters.AddWithValue("@val3", request.PrivacyType);
+                cmd.Parameters.AddWithValue("@val4", password);
                 cmd.Parameters.AddWithValue("@val5", today);
-                cmd.Parameters.AddWithValue("@val6", accountType);
-                cmd.Parameters.AddWithValue("@val7", UID);
-                cmd.Parameters.AddWithValue("@val8", false);
+                cmd.Parameters.AddWithValue("@val6", request.Description);
                 await _dataBase.ExecuteNonQueryStatement(cmd);
 
                 _dataBase.CloseConnection();
 
-                return await Task<int>.Run(() => { return 0; });
+                var newGroup = new GroupDTO();
+
+                newGroup.Id = UID;
+                newGroup.Name = request.Name;
+                newGroup.Description = request.Description;
+
+                return newGroup;
             }
             catch (Exception error)
             {
                 _dataBase.CloseConnection();
-                return await Task<int>.Run(() => { return -1; });
+                return null;
             }
             
         }

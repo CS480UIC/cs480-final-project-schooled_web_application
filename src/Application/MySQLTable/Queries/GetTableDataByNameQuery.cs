@@ -31,7 +31,7 @@ namespace CS_480_Project.Application.MySQLTable.Queries
             try
             {
                 currentTable = new ReturnTableDTO();
-                _dataBase.CreateConnection("localhost", "schooled_test", "danie_test", "applecandykiller", "");
+                _dataBase.CreateConnection("localhost", "schooled_web_application", "danie_test", "applecandykiller", "");
 
                 string sql = "SELECT * FROM " + request.Name + " LIMIT " + request.NumberOfRows + ";";
                 MySqlCommand cmd = new MySqlCommand(sql, _dataBase.GetConnection());

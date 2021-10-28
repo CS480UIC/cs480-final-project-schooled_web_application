@@ -31,11 +31,7 @@ namespace CS_480_Project.Application.Account.Queries
             UserTokenDTO userToken = null;
             try
             {
-
-                if (request.IsAdminLogin)
-                    _dataBase.CreateConnection("localhost", "schooled_test", request.Username, request.Password, "");
-                else
-                    _dataBase.CreateConnection("localhost", "schooled_test", "danie_test", "applecandykiller", "");
+                _dataBase.CreateConnection("localhost", "schooled_web_application", "danie_test", "applecandykiller", "");
 
                 string sql = "SELECT * FROM user WHERE user_username='" + request.Username + "' AND user_password='" + ComputeSha256Hash(request.Password) + "';";
                 MySqlCommand cmd = new MySqlCommand(sql, _dataBase.GetConnection());

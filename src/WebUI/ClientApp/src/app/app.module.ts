@@ -20,6 +20,14 @@ import { TokenComponent } from './token/token.component';
 import { HomeComponent } from './home/home.component';
 import { LoadingComponent } from './loading-page/loading-page.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ResourceGroupCreateComponent } from './resource-group/add/create/resource-group-create.component';
+import { ResourceGroupAddComponent } from './resource-group/add/resource-group-add.component';
+import { ResourceGroupComponent } from './resource-group/resource-group.component';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -30,7 +38,10 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     DatabaseAreaComponent,
     SchooledApplication,
     HomeComponent,
-    LoadingComponent
+    LoadingComponent,
+    ResourceGroupCreateComponent,
+    ResourceGroupAddComponent,
+    ResourceGroupComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -44,7 +55,12 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     CalendarModule,
     CommonModule,
     TabViewModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    InputTextModule,
+    InputTextareaModule,
+    RadioButtonModule,
+    SplitButtonModule,
+    ToastModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },

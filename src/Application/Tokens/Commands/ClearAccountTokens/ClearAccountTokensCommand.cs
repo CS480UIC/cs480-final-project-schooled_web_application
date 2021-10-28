@@ -23,7 +23,7 @@ namespace CS_480_Project.Application.Tokens.Commands.ClearAccountTokens
         public async Task<int> Handle(ClearAccountTokensCommand request, CancellationToken cancellationToken)
         {
             try {
-                _dataBase.CreateConnection("localhost", "schooled_test", "danie_test", "applecandykiller", "");
+                _dataBase.CreateConnection("localhost", "schooled_web_application", "danie_test", "applecandykiller", "");
                 string sql = "DELETE FROM token WHERE user_id='" + request.UserId + "' AND token_type=99;";
                 MySqlCommand cmd = new MySqlCommand(sql, _dataBase.GetConnection());
                 await _dataBase.ExecuteNonQueryStatement(cmd);

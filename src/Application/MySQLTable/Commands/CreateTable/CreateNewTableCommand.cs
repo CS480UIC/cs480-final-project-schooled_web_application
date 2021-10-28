@@ -26,7 +26,7 @@ namespace CS_480_Project.Application.MySQLTable.Commands.CreateTable
         {
             try
             {
-                _dataBase.CreateConnection("localhost", "schooled_test", "danie_test", "applecandykiller", "");
+                _dataBase.CreateConnection("localhost", "schooled_web_application", "danie_test", "applecandykiller", "");
 
                 string sql = "CREATE TABLE " + request.Name + " (";
                 for (int colIndex = 0; colIndex < request.Columns.Length; colIndex++)

@@ -1,9 +1,10 @@
-<div class="d-flex justify-content-center container-fluid">
+<app-loading *ngIf="loading"></app-loading>
+<div *ngIf="!loading" class="d-flex justify-content-center container-fluid">
   <div class="boarder position-ab left-0 top--10 z-index-0"></div>
   <div class="login-form justify-content-center position-ab top--10 boardColor mh-110 w-98 board"></div>
   <div class="boarder position-ab right-0 top--10 z-index-0"></div>
 </div>
-<div class="container">
+<div *ngIf="!loading" class="container">
   <form *ngIf="!registrationForm">
     <p>Welcome To Schooled</p>
     <h2 *ngIf="isAdminLogin">Admin Login</h2>

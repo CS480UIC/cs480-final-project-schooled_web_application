@@ -25,7 +25,7 @@ namespace CS_480_Project.Application.MySQLTable.Commands.DeleteTable
         {
             try
             {
-                _dataBase.CreateConnection("localhost", "schooled_test", "danie_test", "applecandykiller", "");
+                _dataBase.CreateConnection("localhost", "schooled_web_application", "danie_test", "applecandykiller", "");
 
                 string sql = "DROP TABLE " + request.Name + ";";
                 MySqlCommand cmd = new MySqlCommand(sql, _dataBase.GetConnection());

@@ -1,0 +1,75 @@
+@function get-vh($target, $baseHeight) {
+  $vh-context: ($target/$baseHeight);
+  @return ($vh-context) * 100vh;
+}
+
+@function get-vw($target, $baseWidth) {
+  $vw-context: ($target/$baseWidth);
+  @return ($vw-context) * 100vw;
+}
+
+.screenCover{
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 10000;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.centerBox {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 25%;
+  height: get-vh(600px, 730px);
+  min-height: 600px;
+  min-width: 500px;
+  top: get-vh(65px, 730px);
+  width: get-vw(800px, 1068px);
+  left: get-vw(134px, 1068px);
+}
+
+.exit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: get-vw(20px, 1068px);
+  color: white;
+
+  &:hover{
+    color: red;
+  }
+}
+
+.topNav {
+  position: absolute;
+  justify-content: center;
+  text-align: center;
+  width: 50%;
+  left: 25%;
+  top: 20px;
+  height: get-vh(100px, 730px);
+
+  button {
+    background-color: white;
+    width: 50%;
+    height: get-vh(50px, 730px);
+
+    &:hover {
+      background-color: gainsboro;
+    }
+
+    &:disabled {
+      background-color: gainsboro;
+    }
+  }
+
+  button:first-of-type {
+    border-top-left-radius: 75%;
+  }
+
+  button:last-of-type {
+    border-top-right-radius: 75%;
+  }
+}

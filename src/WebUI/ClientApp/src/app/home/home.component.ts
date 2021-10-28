@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AccountsClient, CreateAccountCommand, CheckLoginInfoCommand } from '../web-api-client';
+import { AccountsClient, CreateAccountCommand, CheckLoginInfoCommand, AuthorizationCheckCommand} from '../web-api-client';
 import { Router } from '@angular/router';
 
 @Component({
@@ -8,15 +8,40 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  loading = true;
+
   constructor(private _accountsClient: AccountsClient, private _router: Router) { }
 
   ngOnInit() {
     var retrievedObject = localStorage.getItem('userData');
+    this.loading = true;
+
     if (retrievedObject != null) {
       var userUid = JSON.parse(retrievedObject)['userUIN'];
       var token = JSON.parse(retrievedObject)['token'];
-      if (userUid != null && token != null)
-        this._router.navigateByUrl("database");
+
+      if (userUid != undefined && token != undefined && userUid != null && token != null) {
+        var authCheck = new AuthorizationCheckCommand({
+          userUid: userUid,
+          token: token,
+          isAdminArea: true
+        })
+
+        this._accountsClient.authorized(authCheck).subscribe(result => {
+          if (result != 0) {
+            localStorage.removeItem('userData');
+            this.loading = false;
+          }
+          else {
+            this._router.navigateByUrl("app-user");
+            this.loading = false;
+          }
+        })
+      } else {
+        this.loading = false;
+      }
+    } else {
+      this.loading = false;
     }
   }
 

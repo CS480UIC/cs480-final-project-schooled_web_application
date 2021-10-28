@@ -1,54 +1,52 @@
 ﻿using CS_480_Project.Application.Common.Interfaces;
-using CS_480_Project.Application.Tokens.DTOs;
-using System.Security.Cryptography;
-using System.Text;
 using MySql.Data.MySqlClient;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using System;
+using System.Security.Cryptography;
+using System.Text;
 
-namespace CS_480_Project.Application.Tokens.Commands.CreateToken
+namespace CS_480_Project.Application.GroupMember.Commands.AddGroupMember
 {
-    public class CreateTokenCommand : IRequest<LoginTokenDto>
+    public class AddGroupMemberCommand : IRequest<int>
     {
-        public string UserId { get; set; }
-        public int Type { get; set; }
-        public string UID { get; set; }
+        public string GroupId { get; set; }
+        public string Token { get; set; }
     }
 
-    public class CreateTokenCommandHandler : IRequestHandler<CreateTokenCommand, LoginTokenDto>
+    public class AddGroupMemberCommandHandler : IRequestHandler<AddGroupMemberCommand, int>
     {
         private readonly IDatabaseService _dataBase;
-        public CreateTokenCommandHandler(IDatabaseService dataBase)
+        public AddGroupMemberCommandHandler(IDatabaseService dataBase)
         {
             _dataBase = dataBase;
         }
 
-        public async Task<LoginTokenDto> Handle(CreateTokenCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(AddGroupMemberCommand request, CancellationToken cancellationToken)
         {
-            LoginTokenDto loginToken = null;
             try
             {
-                string token = ComputeSha256Hash(request.UID);
-                loginToken = new LoginTokenDto();
-                loginToken.token = token;
-                loginToken.userUIN = ComputeSha256Hash(request.UserId);
+                var UID = Guid.NewGuid().ToString();
+
                 _dataBase.CreateConnection("localhost", "schooled_web_application", "danie_test", "applecandykiller", "");
-                string sql = "INSERT INTO token (token_token, user_id, token_type, token_creation_date) VALUES(@val1, @val2, @val3, @val4); ";
+                string sql = "INSERT INTO group_member (group_member_id, group_role_id, user_id) " +
+                    "VALUES(@val1, @val2, (SELECT user_id FROM token WHERE token.token_token ='" + request.Token + "));";
                 MySqlCommand cmd = new MySqlCommand(sql, _dataBase.GetConnection());
-                cmd.Parameters.AddWithValue("@val1", token);
-                cmd.Parameters.AddWithValue("@val2", request.UserId);
-                cmd.Parameters.AddWithValue("@val3", request.Type);
-                cmd.Parameters.AddWithValue("@val4", new DateTime());
+                cmd.Parameters.AddWithValue("@val1", UID);
+                cmd.Parameters.AddWithValue("@val2", request.GroupId);
                 await _dataBase.ExecuteNonQueryStatement(cmd);
-                return loginToken;
+
+                _dataBase.CloseConnection();
+
+                return 0;
             }
             catch (Exception error)
             {
                 _dataBase.CloseConnection();
-                return loginToken;
+                return -1;
             }
+
         }
 
         static string ComputeSha256Hash(string rawData)

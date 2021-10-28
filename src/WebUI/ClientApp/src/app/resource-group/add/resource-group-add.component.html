@@ -1,0 +1,10 @@
+<div class="screenCover">
+  <div class="centerBox">
+    <fa-icon class="exit" [icon]="filmIcon" (click)="closeWindowEvent(true)"></fa-icon>
+    <nav class="topNav">
+      <button [disabled]="currentTab==='create'" (click)="currentTab='create'">Create</button>
+      <button [disabled]="currentTab==='join'" (click)="currentTab='join'">Join</button>
+    </nav>
+    <resource-group-create *ngIf="currentTab==='create'"></resource-group-create>
+  </div>
+</div>

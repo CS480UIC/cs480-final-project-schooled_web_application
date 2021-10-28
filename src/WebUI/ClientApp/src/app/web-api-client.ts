@@ -296,6 +296,131 @@ export class AccountsClient implements IAccountsClient {
     }
 }
 
+export interface IGroupsClient {
+    create(token: string | null | undefined, command: CreateGroupCommand): Observable<number>;
+    getGroupsByToken(command: GetGroupsByTokenCommand): Observable<GroupsDTO>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class GroupsClient implements IGroupsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    create(token: string | null | undefined, command: CreateGroupCommand): Observable<number> {
+        let url_ = this.baseUrl + "/api/Groups?";
+        if (token !== undefined && token !== null)
+            url_ += "token=" + encodeURIComponent("" + token) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(<any>null);
+    }
+
+    getGroupsByToken(command: GetGroupsByTokenCommand): Observable<GroupsDTO> {
+        let url_ = this.baseUrl + "/api/Groups/GetGroupsByToken";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetGroupsByToken(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetGroupsByToken(<any>response_);
+                } catch (e) {
+                    return <Observable<GroupsDTO>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GroupsDTO>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetGroupsByToken(response: HttpResponseBase): Observable<GroupsDTO> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GroupsDTO.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GroupsDTO>(<any>null);
+    }
+}
+
 export interface ITablesClient {
     createTable(command: CreateNewTableCommand): Observable<number>;
     getTableData(command: GetTableDataByNameQuery): Observable<ReturnTableDTO>;
@@ -724,6 +849,182 @@ export class GetAccountNameByTokenCommand implements IGetAccountNameByTokenComma
 }
 
 export interface IGetAccountNameByTokenCommand {
+    userUid?: string | undefined;
+    token?: string | undefined;
+}
+
+export class CreateGroupCommand implements ICreateGroupCommand {
+    name?: string | undefined;
+    privacyType?: number;
+    description?: string | undefined;
+    password?: string | undefined;
+
+    constructor(data?: ICreateGroupCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.privacyType = _data["privacyType"];
+            this.description = _data["description"];
+            this.password = _data["password"];
+        }
+    }
+
+    static fromJS(data: any): CreateGroupCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateGroupCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["privacyType"] = this.privacyType;
+        data["description"] = this.description;
+        data["password"] = this.password;
+        return data; 
+    }
+}
+
+export interface ICreateGroupCommand {
+    name?: string | undefined;
+    privacyType?: number;
+    description?: string | undefined;
+    password?: string | undefined;
+}
+
+export class GroupsDTO implements IGroupsDTO {
+    resourceGroups?: GroupDTO[] | undefined;
+
+    constructor(data?: IGroupsDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["resourceGroups"])) {
+                this.resourceGroups = [] as any;
+                for (let item of _data["resourceGroups"])
+                    this.resourceGroups!.push(GroupDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GroupsDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new GroupsDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.resourceGroups)) {
+            data["resourceGroups"] = [];
+            for (let item of this.resourceGroups)
+                data["resourceGroups"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IGroupsDTO {
+    resourceGroups?: GroupDTO[] | undefined;
+}
+
+export class GroupDTO implements IGroupDTO {
+    id?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: IGroupDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): GroupDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new GroupDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        return data; 
+    }
+}
+
+export interface IGroupDTO {
+    id?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+}
+
+export class GetGroupsByTokenCommand implements IGetGroupsByTokenCommand {
+    userUid?: string | undefined;
+    token?: string | undefined;
+
+    constructor(data?: IGetGroupsByTokenCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userUid = _data["userUid"];
+            this.token = _data["token"];
+        }
+    }
+
+    static fromJS(data: any): GetGroupsByTokenCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetGroupsByTokenCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userUid"] = this.userUid;
+        data["token"] = this.token;
+        return data; 
+    }
+}
+
+export interface IGetGroupsByTokenCommand {
     userUid?: string | undefined;
     token?: string | undefined;
 }

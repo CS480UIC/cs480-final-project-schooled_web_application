@@ -1,0 +1,46 @@
+<div class="screenCover">
+  <div class="centerBox">
+    <fa-icon class="exit" [icon]="closeIcon" (click)="close()"></fa-icon>
+    <div class="header">
+      <div class="details">
+        <h2>{{ resourceGroup.name }}</h2>
+        <p>{{ resourceGroup.description }}</p>
+      </div>
+      <nav>
+        <button class="standardButton" *ngIf="isAdmin && groupTab == 'resoureTab'" (click)="groupTab = 'editTab'">Edit</button>
+        <button *ngIf="isAdmin && groupTab == 'editTab'" (click)="groupTab = 'resoureTab'; groupName = resourceGroup.name; groupDescription = resourceGroup.description" class="warningButton">Back</button>
+      </nav>
+    </div>
+    <div *ngIf="groupTab == 'resoureTab'" class="innerBook">
+      <div class="leftPage">
+        <div class="l-line"></div>
+        <div class="resourceArea">
+          <fa-icon class="addResource" [icon]="addIcon"></fa-icon>
+        </div>
+      </div>
+      <div class="pageSplit"></div>
+      <div class="rightPage">
+        <div class="l-line"></div>
+      </div>
+    </div>
+    <div *ngIf="groupTab == 'editTab'" class="editBox">
+      <h5>Group Name</h5>
+      <span class="p-float-label">
+        <input [(ngModel)]="groupName" id="float-input" type="text" pInputText>
+      </span>
+      <h5>Privacy Type</h5>
+      <div *ngFor="let category of categories" class="p-field-checkbox">
+        <p-radioButton [inputId]="category.key" name="category" [value]="category" [(ngModel)]="selectedCategory"></p-radioButton>
+        <label [for]="category.key">{{category.name}}</label>
+      </div><br /><br />
+      <h5>Description</h5>
+      <span class="p-float-label">
+        <textarea [(ngModel)]="groupDescription" id="float-input" rows="5" cols="30" pInputTextarea></textarea>
+      </span>
+      <div class="buttonNav">
+        <button class="standardButton">Save</button>
+        <button class="warningButton" *ngIf="isAdmin">Delete Group</button>
+      </div>
+    </div>
+  </div>
+</div>

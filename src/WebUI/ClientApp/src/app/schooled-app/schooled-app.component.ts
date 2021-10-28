@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { fromEvent, Subscription, Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { AccountsClient, AuthorizationCheckCommand, GetAccountNameByTokenCommand, ClearAccountTokensByToken } from '../web-api-client';
+import {
+  AccountsClient, GroupsClient, GetGroupsByTokenCommand, AuthorizationCheckCommand,
+  GroupsDTO, GetAccountNameByTokenCommand, ClearAccountTokensByToken, GroupDTO
+} from '../web-api-client';
 
 @Component({
   selector: 'schooled-app-home',
@@ -11,7 +14,7 @@ import { AccountsClient, AuthorizationCheckCommand, GetAccountNameByTokenCommand
 
 export class SchooledApplication implements OnInit {
 
-  constructor(private _accountsClient: AccountsClient, private _router: Router) { };
+  constructor(private _accountsClient: AccountsClient, private _router: Router, private _groupsClient: GroupsClient) { };
 
   resizeObservable$: Observable<Event>;
   resizeSubscription$: Subscription;
@@ -19,12 +22,19 @@ export class SchooledApplication implements OnInit {
   page_number = 0;
   account_username = "";
   current_number_of_books = 10;
+  user_token = null;
+  user_Uid = null;
+  authCheckCommand = null;
+  resourceGroups = null;
+  addDialog = false;
+  currentResourceGroup: GroupDTO = null;
 
   ngOnInit() {
     this.max_books = Math.floor(((window.innerWidth) / 154.3)) * 3 - 1;
     this.resizeObservable$ = fromEvent(window, 'resize')
     this.resizeSubscription$ = this.resizeObservable$.subscribe(evt => {
       this.max_books = Math.floor(((window.innerWidth) / 154.3)) * 3 - 1;
+      this.page_number = 0;
     })
 
     var retrievedObject = localStorage.getItem('userData');
@@ -33,30 +43,38 @@ export class SchooledApplication implements OnInit {
       this._router.navigateByUrl("");
     }
     else {
-      var userUid = JSON.parse(retrievedObject)['userUIN'];
-      var token = JSON.parse(retrievedObject)['token'];
+      this.user_Uid = JSON.parse(retrievedObject)['userUIN'];
+      this.user_token = JSON.parse(retrievedObject)['token'];
 
-      if (userUid == undefined || token == undefined || userUid == null || token == null) {
+      if (this.user_Uid == undefined || this.user_token == undefined || this.user_Uid == null || this.user_token == null) {
         this._router.navigateByUrl("");
         localStorage.removeItem('userData');
       }
       else {
-        var authCheck = new AuthorizationCheckCommand({
-          userUid: userUid,
-          token: token,
+        this.authCheckCommand = new AuthorizationCheckCommand({
+          userUid: this.user_Uid,
+          token: this.user_token,
           isAdminArea: false
         })
 
-        this._accountsClient.authorized(authCheck).subscribe(result => {
+        this._accountsClient.authorized(this.authCheckCommand).subscribe(result => {
           if (result != 0) {
             localStorage.removeItem('userData');
             this._router.navigateByUrl("");
           } else {
             var userInfo = new GetAccountNameByTokenCommand({
-              userUid: userUid,
-              token: token
+              userUid: this.user_Uid,
+              token: this.user_token
             })
             this._accountsClient.getUsername(userInfo).subscribe(result => this.account_username = result);
+            var tokenInfo = new GetGroupsByTokenCommand({
+              userUid: this.user_Uid,
+              token: this.user_token
+            })
+            this._groupsClient.getGroupsByToken(tokenInfo).subscribe(result => {
+              this.resourceGroups = result;
+              console.log(this.resourceGroups);
+            });
           }
         })
       }
@@ -92,4 +110,7 @@ export class SchooledApplication implements OnInit {
     })
   }
 
+  setcurrentResourceGroup(index) {
+    this.currentResourceGroup = this.resourceGroups.resourceGroups[index];
+  }
 }

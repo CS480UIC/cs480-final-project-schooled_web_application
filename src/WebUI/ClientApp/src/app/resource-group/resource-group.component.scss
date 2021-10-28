@@ -1,0 +1,316 @@
+@function get-vh($target, $baseHeight) {
+  $vh-context: ($target/$baseHeight);
+  @return ($vh-context) * 100vh;
+}
+
+@function get-vw($target, $baseWidth) {
+  $vw-context: ($target/$baseWidth);
+  @return ($vw-context) * 100vw;
+}
+
+.screenCover {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 10000;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.centerBox {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 25%;
+  height: get-vh(600px, 730px);
+  min-height: 600px;
+  min-width: 500px;
+  top: get-vh(65px, 730px);
+  width: get-vw(900px, 1068px);
+  left: get-vw(84px, 1068px);
+  align-content: center;
+  text-align: center;
+  color: white;
+}
+
+.header {
+  margin-top: 10px;
+  .details {
+    width: 50%;
+    display: inline-block;
+  }
+
+  nav {
+    width: 50%;
+    display: inline-block;
+  }
+
+  clear: both;
+}
+
+.innerBook {
+  margin-top: 25px;
+  width: 80%;
+  margin-left: 10%;
+  height: 65%;
+  min-height: 400px;
+  min-width: 400px;
+
+  .leftPage {
+    background: repeating-linear-gradient(white, white 80px, #9198e5 81px, #9198e5 82px);
+    width: 49%;
+    float: left;
+    height: 100%;
+    border-bottom-left-radius: 5%;
+    border-top-left-radius: 5%;
+    z-index: 100000;
+    box-shadow:
+    -1px 0 1px rgba(0,0,0,0.15),
+    -10px 0 0 -5px rgba(255, 255, 255, 1),
+    -10px 0 1px -4px rgba(0,0,0,0.15),
+    -20px 0 0 -10px rgba(255, 255, 255, 1),
+    -20px 0 1px -9px rgba(0,0,0,0.15),
+    -8px 0 2px 12px rgba(225, 217, 209,1);
+  }
+
+  
+  .l-line {
+    position: relative;
+    float: left;
+    border-left: 4px solid pink;
+    left: 60px;
+    height: 100%;
+    min-height: 400px;
+    width: 0;
+  }
+
+  .pageSplit {
+    position: absolute;
+    box-shadow: 0 0 20px 6px #000000;
+    z-index: 100001;
+    float: left;
+    width: .25%;
+    background-color: black;
+    height: 65%;
+    min-height: 400px;
+    left: 49.875%;
+  }
+
+  .rightPage {
+    background: repeating-linear-gradient(white, white 80px, #9198e5 81px, #9198e5 82px);
+    width: 49%;
+    float: left;
+    z-index: 100000;
+    height: 100%;
+    border-bottom-right-radius: 5%;
+    border-top-right-radius: 5%;
+    box-shadow:
+    1px 0 1px rgba(0,0,0,0.15),
+    10px 0 0 -5px rgba(255, 255, 255, 1),
+    10px 0 1px -4px rgba(0,0,0,0.15),
+    20px 0 0 -10px rgba(255, 255, 255, 1),
+    20px 0 1px -9px rgba(0,0,0,0.15),
+    14px 0 2px 12px rgba(225, 217, 209,1);
+  }
+}
+
+button {
+  width: 25%;
+  border-radius: 50%;
+  margin-top: 1em;
+  margin-left: 5px;
+  margin-bottom: 10px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+
+  &.standardButton {
+    background-color: ghostwhite;
+    color: black;
+
+    &:hover {
+      background-color: lightgrey;
+    }
+
+    &:active {
+      background-color: lightgrey;
+      box-shadow: 0 5px #777;
+      transform: translateY(4px);
+    }
+
+    &:disabled {
+      background-color: lightgrey;
+      cursor: default;
+    }
+  }
+
+  &.warningButton {
+    background-color: red;
+    color: ghostwhite;
+
+    &:hover {
+      background-color: darkred;
+    }
+
+    &:active {
+      background-color: darkred;
+      box-shadow: 0 5px #777;
+      transform: translateY(4px);
+    }
+
+    &:disabled {
+      background-color: darkred;
+      cursor: default;
+    }
+  }
+}
+
+.editBox {
+  margin-top: 15px;
+  width: 80%;
+  margin-left: 10%;
+  height: 65%;
+  min-height: 400px;
+  min-width: 400px;
+  align-content: left;
+  text-align: left;
+
+  button {
+    padding: 5px 5px;
+  }
+}
+.exit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: get-vw(20px, 1068px);
+  color: white;
+
+  &:hover {
+    color: red;
+  }
+}
+
+.resourceArea {
+  float: left;
+  height: 100%;
+  min-height: 400px;
+  width: 80%;
+}
+
+.addResource {
+  position: relative;
+  font-size: get-vw(30px, 1068px);
+  color: lightgray;
+  left: -150px;
+  &:hover {
+    color: lightslategrey;
+  }
+}
+
+input {
+  margin-left: 5%;
+  color: black;
+  background-color: white;
+  width: 50%;
+  padding: 1em;
+  margin-bottom: 2em;
+  border: none;
+  border-left: 1px solid white;
+  border-top: 1px solid white;
+  border-radius: 5000px;
+  backdrop-filter: blur(5px);
+  box-shadow: 4px 4px 60px rgba(0,0,0,0.2);
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+
+  &:hover {
+    background: rgba(255,255,255,0.6);
+    box-shadow: 4px 4px 60px 8px rgba(0,0,0,0.2);
+  }
+
+  &[type="text"] {
+    &:focus {
+      background: rgba(255,255,255,0.6);
+      box-shadow: 4px 4px 60px 8px rgba(0,0,0,0.2);
+    }
+  }
+}
+
+textarea {
+  margin-left: 5%;
+  color: black;
+  background-color: white;
+  width: 90%;
+  height: 150px;
+  margin-bottom: 2em;
+  border: none;
+  border-left: 1px solid white;
+  border-top: 1px solid white;
+  backdrop-filter: blur(5px);
+  box-shadow: 4px 4px 60px rgba(0,0,0,0.2);
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+
+  &:hover {
+    background: rgba(255,255,255,0.6);
+    box-shadow: 4px 4px 60px 8px rgba(0,0,0,0.2);
+  }
+
+  &:focus {
+    background: rgba(255,255,255,0.6);
+    box-shadow: 4px 4px 60px 8px rgba(0,0,0,0.2);
+  }
+}
+
+.p-field-checkbox {
+  font-size: 1.25em;
+
+  p-radioButton {
+    display: inline-block;
+    -ms-transform: scale(1.5); /* IE 9 */
+    -webkit-transform: scale(1.5); /* Chrome, Safari, Opera */
+    transform: scale(1.5);
+    margin-right: 5px;
+    float: left;
+  }
+
+  label {
+    display: inline-block;
+    margin-right: 20px;
+    float: left;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  opacity: 0;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: black;
+  border-radius: 10px;
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0,0,0, 0.5);
+  opacity: 1;
+}
+
+.buttonNav{
+    align-content: center;
+    text-align: center;
+}

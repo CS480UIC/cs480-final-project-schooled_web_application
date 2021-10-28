@@ -53,6 +53,10 @@
     <TypeScriptCompile Include="ClientApp\src\app\database-area\database-area.component.ts" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ClientApp\src\app\resource-group\add\join\" />
+  </ItemGroup>
+
   <Target Name="NSwag" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
     <Copy SourceFiles="@(Reference)" DestinationFolder="$(OutDir)References" />
     <Exec Command="$(NSwagExe_Net50) run /variables:Configuration=$(Configuration)" />

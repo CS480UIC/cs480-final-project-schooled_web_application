@@ -26,8 +26,7 @@ namespace CS_480_Project.Infrastructure.Services
         
         static async Task Execute()
         {
-            var apiKey = "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";
-            //"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";//
+            var apiKey = "";
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("djohn50@uic.edu", "Travel Test User");
             var subject = emailSubject;
