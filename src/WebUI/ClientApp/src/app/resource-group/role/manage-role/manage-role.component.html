@@ -1,0 +1,17 @@
+<h3 *ngIf="role != 'new'" style="color:black;margin-left:20px;">Manage Role Page: {{role}}</h3>
+<h3 *ngIf="role == 'new'" style="color:black;margin-left:20px;">Create New Role</h3>
+
+<h5 style="color:black;margin-left:20px;">Role Name</h5>
+<span class="p-float-label">
+  <input [(ngModel)]="roleName" id="float-input" type="text" pInputText>
+</span>
+<h5 style="color:black;margin-left:20px;">Description</h5>
+<span class="p-float-label">
+  <textarea [(ngModel)]="roleDescription" id="float-input" rows="5" cols="30" pInputTextarea></textarea>
+</span>
+
+<div class="buttonNav">
+  <button *ngIf="role == 'new'" class="standardButton">Create</button>
+  <button *ngIf="role != 'new'" class="standardButton">Save</button>
+  <button *ngIf="role != 'new'" class="warningButton" [disabled]="role == 'Owner' || role == 'Member'">Delete Role</button>
+</div>

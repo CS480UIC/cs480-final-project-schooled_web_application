@@ -36,7 +36,7 @@
 .header {
   margin-top: 10px;
   .details {
-    width: 50%;
+    width: 40%;
     display: inline-block;
   }
 
@@ -57,7 +57,7 @@
   min-width: 400px;
 
   .leftPage {
-    background: repeating-linear-gradient(white, white 80px, #9198e5 81px, #9198e5 82px);
+    background: repeating-linear-gradient(white, white 100px, #9198e5 101px, #9198e5 102px);
     width: 49%;
     float: left;
     height: 100%;
@@ -97,7 +97,7 @@
   }
 
   .rightPage {
-    background: repeating-linear-gradient(white, white 80px, #9198e5 81px, #9198e5 82px);
+    background: repeating-linear-gradient(white, white 100px, #9198e5 101px, #9198e5 102px);
     width: 49%;
     float: left;
     z-index: 100000;
@@ -118,7 +118,7 @@ button {
   width: 25%;
   border-radius: 50%;
   margin-top: 1em;
-  margin-left: 5px;
+  margin-right: 5px;
   margin-bottom: 10px;
   padding: 10px 15px;
   font-size: 16px;
@@ -208,7 +208,8 @@ button {
   position: relative;
   font-size: get-vw(30px, 1068px);
   color: lightgray;
-  left: -150px;
+  left: -100px;
+  display: inline-block;
   &:hover {
     color: lightslategrey;
   }
@@ -313,4 +314,79 @@ textarea {
 .buttonNav{
     align-content: center;
     text-align: center;
+}
+
+.roleList {
+  position: relative;
+  width: 80%;
+  margin-left: 10%;
+  height: 100%;
+  min-height: 400px;
+  background-color: rgba(255,255,255,0.9);
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.newRoleButton {
+  position: absolute;
+  top: 85%;
+  left: 5%;
+  width: 90%;
+  height: 50px;
+  background-color: snow;
+
+  &:hover {
+    background-color: ghostwhite;
+  }
+
+  &:active {
+    background-color: ghostwhite;
+    box-shadow: 0 5px #777;
+    transform: translateY(4px);
+  }
+
+  &:disabled {
+    background-color: ghostwhite;
+    cursor: default;
+  }
+}
+
+.roleButton {
+  width: 95%;
+  margin-left: 2.5%;
+  border-radius: 0;
+  margin-top: 1em;
+  margin-right: 0;
+  margin-bottom: 0;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  border: none;
+  box-shadow: none;
+  border: 1px solid black;
+  &:hover {
+    background-color: ghostwhite;
+  }
+
+  &:active {
+    background-color: ghostwhite;
+  }
+
+  &:disabled {
+    background-color: ghostwhite;
+    cursor: default;
+  }
+}
+
+.resource {
+  color: black;
+  display: inline-block;
+  h5 {
+    position: relative;
+    top: 10px;
+    left: -100px;
+  }
 }

@@ -5,7 +5,7 @@ import {
   AccountsClient, GroupsClient, GroupDTO, AuthorizationCheckCommand
 } from '../web-api-client';
 import { MenuItem } from 'primeng/api';
-import { faWindowClose, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faWindowClose, faPlusCircle, faChalkboard, faLayerGroup, faFileAlt } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -20,7 +20,11 @@ export class ResourceGroupComponent implements OnInit {
 
   closeIcon = faWindowClose;
   addIcon = faPlusCircle;
+  resourceTypes = [faChalkboard, faLayerGroup, faFileAlt];
   groupTab = 'resoureTab';
+  editTab = 'generalTab';
+  currentRole = null;
+  currentResource = null;
   isAdmin: boolean = false;
   selectedCategory: any = null;
   groupName = null;
@@ -31,19 +35,6 @@ export class ResourceGroupComponent implements OnInit {
   constructor(private _accountsClient: AccountsClient, private _router: Router, private _groupsClient: GroupsClient) { };
 
   ngOnInit() {
-    this.items = [
-      {
-        label: 'Members', icon: 'pi pi-refresh', command: () => {
-          console.log('Members');
-        }
-      },
-      { separator: true },
-      {
-        label: 'Permission', icon: 'pi pi-times', command: () => {
-          console.log('Permission');
-        }
-      }
-    ];
     this.selectedCategory = this.categories[0];
     this.groupName = this.resourceGroup.name;
     this.groupDescription = this.resourceGroup.description;

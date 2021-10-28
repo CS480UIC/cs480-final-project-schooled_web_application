@@ -8,38 +8,58 @@
       </div>
       <nav>
         <button class="standardButton" *ngIf="isAdmin && groupTab == 'resoureTab'" (click)="groupTab = 'editTab'">Edit</button>
+        <button *ngIf="isAdmin && groupTab == 'editTab'" [disabled]="editTab == 'generalTab'" (click)="editTab = 'generalTab'" class="standardButton">General</button>
+        <button *ngIf="isAdmin && groupTab == 'editTab'" [disabled]="editTab == 'roleTab'" (click)="editTab = 'roleTab'" class="standardButton">Roles</button>
         <button *ngIf="isAdmin && groupTab == 'editTab'" (click)="groupTab = 'resoureTab'; groupName = resourceGroup.name; groupDescription = resourceGroup.description" class="warningButton">Back</button>
       </nav>
     </div>
     <div *ngIf="groupTab == 'resoureTab'" class="innerBook">
-      <div class="leftPage">
-        <div class="l-line"></div>
-        <div class="resourceArea">
-          <fa-icon class="addResource" [icon]="addIcon"></fa-icon>
+      <resource *ngIf="currentResource != null" [resource]="currentResource"></resource>
+      <div *ngIf="currentResource == null">
+        <div class="leftPage">
+          <div class="l-line"></div>
+          <div class="resourceArea">
+            <fa-icon class="addResource" [icon]="addIcon" (click)="currentResource = 'new'"></fa-icon>
+            <div class="resource">
+              <h5>Basic Deck</h5>
+              <fa-icon class="addResource" [icon]="resourceTypes[1]" (click)="currentResource = 'Basic Deck'"></fa-icon>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="pageSplit"></div>
-      <div class="rightPage">
-        <div class="l-line"></div>
+        <div class="pageSplit"></div>
+        <div class="rightPage">
+          <div class="l-line"></div>
+        </div>
       </div>
     </div>
     <div *ngIf="groupTab == 'editTab'" class="editBox">
-      <h5>Group Name</h5>
-      <span class="p-float-label">
-        <input [(ngModel)]="groupName" id="float-input" type="text" pInputText>
-      </span>
-      <h5>Privacy Type</h5>
-      <div *ngFor="let category of categories" class="p-field-checkbox">
-        <p-radioButton [inputId]="category.key" name="category" [value]="category" [(ngModel)]="selectedCategory"></p-radioButton>
-        <label [for]="category.key">{{category.name}}</label>
-      </div><br /><br />
-      <h5>Description</h5>
-      <span class="p-float-label">
-        <textarea [(ngModel)]="groupDescription" id="float-input" rows="5" cols="30" pInputTextarea></textarea>
-      </span>
-      <div class="buttonNav">
-        <button class="standardButton">Save</button>
-        <button class="warningButton" *ngIf="isAdmin">Delete Group</button>
+      <div *ngIf="editTab == 'generalTab'">
+        <h5>Group Name</h5>
+        <span class="p-float-label">
+          <input [(ngModel)]="groupName" id="float-input" type="text" pInputText>
+        </span>
+        <h5>Privacy Type</h5>
+        <div *ngFor="let category of categories" class="p-field-checkbox">
+          <p-radioButton [inputId]="category.key" name="category" [value]="category" [(ngModel)]="selectedCategory"></p-radioButton>
+          <label [for]="category.key">{{category.name}}</label>
+        </div><br /><br />
+        <h5>Description</h5>
+        <span class="p-float-label">
+          <textarea [(ngModel)]="groupDescription" id="float-input" rows="5" cols="30" pInputTextarea></textarea>
+        </span>
+        <div class="buttonNav">
+          <button class="standardButton">Save</button>
+          <button class="warningButton" *ngIf="isAdmin">Delete Group</button>
+        </div>
+      </div>
+      <div *ngIf="editTab == 'roleTab'" class="roleList">
+        <div *ngIf="currentRole == null">
+          <button class="roleButton" (click)="currentRole = 'Owner'">Owner</button>
+          <button class="roleButton" (click)="currentRole = 'Admin'">Admin</button>
+          <button class="roleButton" (click)="currentRole = 'Member'">Member</button>
+          <button class="newRoleButton" (click)="currentRole = 'new'">Add New Role</button>
+        </div>
+        <manage-role *ngIf="currentRole != null" [role]="currentRole"></manage-role>
       </div>
     </div>
   </div>

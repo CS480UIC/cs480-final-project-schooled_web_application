@@ -1,0 +1,18 @@
+<div class="form">
+  <h2 *ngIf="resource == 'new'">Create New Resource</h2>
+  <h2 *ngIf="resource != 'new'">Manager Resource: {{resourceName}}</h2>
+  <h5>Resource Name</h5>
+  <span class="p-float-label">
+    <input [(ngModel)]="resourceName" id="float-input" type="text" pInputText>
+  </span>
+  <h5>Resource Type</h5>
+  <div *ngFor="let category of categories" class="p-field-checkbox">
+    <p-radioButton [inputId]="category.key" name="category" [value]="category" [(ngModel)]="selectedCategory"></p-radioButton>
+    <label [for]="category.key">{{category.name}}</label>
+  </div><br /><br /><br />
+  <div class="buttonNav">
+    <button *ngIf="resource == 'new'" class="standardButton">Create</button>
+    <button *ngIf="resource != 'new'" class="standardButton">Save</button>
+    <button *ngIf="resource != 'new'" class="warningButton">Delete Resource</button>
+  </div>
+</div>

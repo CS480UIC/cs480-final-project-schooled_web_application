@@ -24,6 +24,26 @@ This application will be created on a ASP.NET Core 5 using Angular 12 with Prime
 
 This database is unique given that it allows for so much variety in the space of learning and will allow for features like going back and forward through all the whiteboard history on any whiteboard resource. This will also allow for expansion of features as further idea develop in this area since all the resource types are split from the Resource table and linked using its idea. The database also gives the options to add in more permissions options latter on given the design of the permissions tables.
 
+## CRUD IMAGES
+
+### Resource Group
+
+![New Resource Group](img/Create_Screen_Group.png)
+![New Resource Group Code](img/Create_Group_HTML.png)
+![Resource Group Management](img/Update_And_Delete_Screen_Group.png)
+![Resource Group Management Code Part One](img/Group_Management_HTML.png)
+![Resource Group Management Code Part Two](img/Group_Management_HTML_2.png)
+### Group Role
+
+![New Role ](img/Create_Screen_Role.png)
+![Role Management](img/Update_And_Delete_Screen_Role.png)
+![Role Management Code](img/Role_Management_HTML.png)
+
+### Resource
+
+![New Resource ](img/Create_Screen_Resource.png)
+![Resource Management](img/Update_And_Delete_Screen_Resource.png)
+![Resource Management Code](img/Resource_Management_HTML.png)
 
 ## Technologies
 

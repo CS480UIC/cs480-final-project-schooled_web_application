@@ -28,6 +28,8 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { ToastModule } from 'primeng/toast';
+import { ManagRoleComponent } from './resource-group/role/manage-role/manage-role.component';
+import { ResourceComponent } from './resource-group/resource/resource.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,9 @@ import { ToastModule } from 'primeng/toast';
     LoadingComponent,
     ResourceGroupCreateComponent,
     ResourceGroupAddComponent,
-    ResourceGroupComponent
+    ResourceGroupComponent,
+    ManagRoleComponent,
+    ResourceComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

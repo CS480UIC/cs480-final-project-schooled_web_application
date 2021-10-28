@@ -1,0 +1,150 @@
+@function get-vh($target, $baseHeight) {
+  $vh-context: ($target/$baseHeight);
+  @return ($vh-context) * 100vh;
+}
+
+@function get-vw($target, $baseWidth) {
+  $vw-context: ($target/$baseWidth);
+  @return ($vw-context) * 100vw;
+}
+
+.form {
+  justify-content: center;
+  text-align: left;
+  color: white;
+  width: 50%;
+  left: 25%;
+  position: absolute;
+  height: 50%;
+  top: 15%;
+
+  input {
+    width: 90%;
+    margin-left: 5%;
+    border-radius: 30%;
+    height: 50px;
+  }
+
+  textarea {
+    width: 90%;
+    margin-left: 5%;
+    height: 150px;
+    resize: none;
+  }
+
+
+  .p-float-label {
+    display: block;
+  }
+
+  .p-field-checkbox {
+    font-size: 1.25em;
+
+    p-radioButton {
+      display: inline-block;
+      -ms-transform: scale(1.5); /* IE 9 */
+      -webkit-transform: scale(1.5); /* Chrome, Safari, Opera */
+      transform: scale(1.5);
+      margin-right: 5px;
+      float: left;
+    }
+
+    label {
+      display: inline-block;
+      margin-right: 20px;
+      float: left;
+    }
+  }
+
+  input {
+    margin-left: 5%;
+    color: black;
+    background-color: white;
+    width: 90%;
+    padding: 1em;
+    margin-bottom: 2em;
+    border: none;
+    border-left: 1px solid white;
+    border-top: 1px solid white;
+    border-radius: 5000px;
+    backdrop-filter: blur(5px);
+    box-shadow: 4px 4px 60px rgba(0,0,0,0.2);
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+
+    &:hover {
+      background: rgba(255,255,255,0.6);
+      box-shadow: 4px 4px 60px 8px rgba(0,0,0,0.2);
+    }
+
+    &[type="text"] {
+      &:focus {
+        background: rgba(255,255,255,0.6);
+        box-shadow: 4px 4px 60px 8px rgba(0,0,0,0.2);
+      }
+    }
+  }
+}
+
+button {
+  width: 25%;
+  border-radius: 50%;
+  margin-top: 1em;
+  margin-right: 5px;
+  margin-bottom: 10px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+
+  &.standardButton {
+    background-color: ghostwhite;
+    color: black;
+
+    &:hover {
+      background-color: lightgrey;
+    }
+
+    &:active {
+      background-color: lightgrey;
+      box-shadow: 0 5px #777;
+      transform: translateY(4px);
+    }
+
+    &:disabled {
+      background-color: lightgrey;
+      cursor: default;
+    }
+  }
+
+  &.warningButton {
+    background-color: red;
+    color: ghostwhite;
+
+    &:hover {
+      background-color: darkred;
+    }
+
+    &:active {
+      background-color: darkred;
+      box-shadow: 0 5px #777;
+      transform: translateY(4px);
+    }
+
+    &:disabled {
+      background-color: darkred;
+      cursor: default;
+    }
+  }
+}
+
+.buttonNav {
+  align-content: center;
+  text-align: center;
+}
