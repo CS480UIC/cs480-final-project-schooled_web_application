@@ -28,23 +28,23 @@ This database is unique given that it allows for so much variety in the space of
 
 ### Resource Group
 
-![New Resource Group](/img/Create_Screen_Group.png)
-![New Resource Group Code](/img/Create_Group_HTML.png)
-![Resource Group Management](/img/Update_And_Delete_Screen_Group.png)
-![Resource Group Management Code Part One](/img/Group_Management_HTML.png)
-![Resource Group Management Code Part Two](/img/Group_Management_HTML_2.png)
+![New Resource Group](/img/Create_Screen_Group.PNG)
+![New Resource Group Code](/img/Create_Group_HTML.PNG)
+![Resource Group Management](/img/Update_And_Delete_Screen_Group.PNG)
+![Resource Group Management Code Part One](/img/Group_Management_HTML.PNG)
+![Resource Group Management Code Part Two](/img/Group_Management_HTML_2.PNG)
 
 ### Group Role
 
-![New Role ](/img/Create_Screen_Role.png)
-![Role Management](/img/Update_And_Delete_Screen_Role.png)
-![Role Management Code](/img/Role_Management_HTML.png)
+![New Role ](/img/Create_Screen_Role.PNG)
+![Role Management](/img/Update_And_Delete_Screen_Role.PNG)
+![Role Management Code](/img/Role_Management_HTML.PNG)
 
 ### Resource
 
-![New Resource ](/img/Create_Screen_Resource.png)
-![Resource Management](/img/Update_And_Delete_Screen_Resource.png)
-![Resource Management Code](/img/Resource_Management_HTML.png)
+![New Resource ](/img/Create_Screen_Resource.PNG)
+![Resource Management](/img/Update_And_Delete_Screen_Resource.PNG)
+![Resource Management Code](/img/Resource_Management_HTML.PNG)
 
 ## Technologies
 
