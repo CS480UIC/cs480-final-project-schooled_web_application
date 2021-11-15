@@ -1,0 +1,12 @@
+DROP TABLE resource_permission;
+DROP TABLE question;
+DROP TABLE card;
+DROP TABLE whiteboard;
+DROP TABLE resource;
+DROP TABLE group_member;
+DROP TABLE group_role;
+DROP TABLE invite;
+DROP TABLE token;
+DROP TABLE permission;
+DROP TABLE resource_group;
+DROP TABLE user;
