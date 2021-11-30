@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { fromEvent, Subscription, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import {
@@ -14,6 +14,8 @@ import {
 export class ResourceGroupCreateComponent implements OnInit {
 
   constructor(private _accountsClient: AccountsClient, private _router: Router, private _groupsClient: GroupsClient) { };
+
+  @Output() createNew = new EventEmitter<any>();
 
   user_token = null;
   user_Uid = null;
@@ -49,12 +51,18 @@ export class ResourceGroupCreateComponent implements OnInit {
 
     this._accountsClient.authorized(userInfo).subscribe(isAuthorized => {
       if (isAuthorized == 0)
-        this._groupsClient.create(user_token, newGroup).subscribe(result => console.log(result));
+        this._groupsClient.create(user_token, newGroup).subscribe(result => {
+          this.createNewResouce();
+        });
       else {
         this._router.navigateByUrl("");
         localStorage.removeItem('userData');
       }
     })
    
+  }
+
+  createNewResouce() {
+    this.createNew.emit();
   }
 }

@@ -5,6 +5,6 @@
       <button [disabled]="currentTab==='create'" (click)="currentTab='create'">Create</button>
       <button [disabled]="currentTab==='join'" (click)="currentTab='join'">Join</button>
     </nav>
-    <resource-group-create *ngIf="currentTab==='create'"></resource-group-create>
+    <resource-group-create *ngIf="currentTab==='create'" (createNew)="closeWindowEvent(true)"></resource-group-create>
   </div>
 </div>

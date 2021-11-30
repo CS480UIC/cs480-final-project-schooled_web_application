@@ -37,6 +37,43 @@ export class SchooledApplication implements OnInit {
       this.page_number = 0;
     })
 
+    this.reloadGroups();
+  }
+
+  public counter(start: number, end: number) {
+    var indexArray = [];
+    var newEnd = 0;
+
+    if (((end) / this.max_books) - (this.page_number) >= 1)
+      newEnd = this.max_books;
+    else
+      newEnd = end % this.max_books
+
+    for (let i = start; i < newEnd + start; i++) {
+      indexArray.push(i);
+    }
+    return indexArray;
+  }
+
+  public logout() {
+    var retrievedObject = localStorage.getItem('userData');
+    var token = JSON.parse(retrievedObject)['token'];
+    var logout = new ClearAccountTokensByToken({
+      token: token
+    })
+    this._accountsClient.logout(logout).subscribe(result => {
+      if (result != -1) {
+        localStorage.removeItem('userData');
+        this._router.navigateByUrl("");
+      }
+    })
+  }
+
+  setcurrentResourceGroup(index) {
+    this.currentResourceGroup = this.resourceGroups.resourceGroups[index];
+  }
+
+  reloadGroups() {
     var retrievedObject = localStorage.getItem('userData');
 
     if (retrievedObject == null) {
@@ -81,36 +118,13 @@ export class SchooledApplication implements OnInit {
     }
   }
 
-  public counter(start: number, end: number) {
-    var indexArray = [];
-    var newEnd = 0;
-
-    if (((end) / this.max_books) - (this.page_number) >= 1)
-      newEnd = this.max_books;
-    else
-      newEnd = end % this.max_books
-
-    for (let i = start; i < newEnd + start; i++) {
-      indexArray.push(i);
-    }
-    return indexArray;
+  closeAdd(event) {
+    this.addDialog = !event;
+    this.reloadGroups();
   }
 
-  public logout() {
-    var retrievedObject = localStorage.getItem('userData');
-    var token = JSON.parse(retrievedObject)['token'];
-    var logout = new ClearAccountTokensByToken({
-      token: token
-    })
-    this._accountsClient.logout(logout).subscribe(result => {
-      if (result != -1) {
-        localStorage.removeItem('userData');
-        this._router.navigateByUrl("");
-      }
-    })
-  }
-
-  setcurrentResourceGroup(index) {
-    this.currentResourceGroup = this.resourceGroups.resourceGroups[index];
+  closeUpdate(event) {
+    this.currentResourceGroup = event;
+    this.reloadGroups();
   }
 }

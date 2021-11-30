@@ -10,7 +10,7 @@
         <button class="standardButton" *ngIf="isAdmin && groupTab == 'resoureTab'" (click)="groupTab = 'editTab'">Edit</button>
         <button *ngIf="isAdmin && groupTab == 'editTab'" [disabled]="editTab == 'generalTab'" (click)="editTab = 'generalTab'" class="standardButton">General</button>
         <button *ngIf="isAdmin && groupTab == 'editTab'" [disabled]="editTab == 'roleTab'" (click)="editTab = 'roleTab'" class="standardButton">Roles</button>
-        <button *ngIf="isAdmin && groupTab == 'editTab'" (click)="groupTab = 'resoureTab'; groupName = resourceGroup.name; groupDescription = resourceGroup.description" class="warningButton">Back</button>
+        <button *ngIf="isAdmin && groupTab == 'editTab'" (click)="groupTab = 'resoureTab';editTab = 'generalTab'" class="warningButton">Back</button>
       </nav>
     </div>
     <div *ngIf="groupTab == 'resoureTab'" class="innerBook">
@@ -48,18 +48,16 @@
           <textarea [(ngModel)]="groupDescription" id="float-input" rows="5" cols="30" pInputTextarea></textarea>
         </span>
         <div class="buttonNav">
-          <button class="standardButton">Save</button>
-          <button class="warningButton" *ngIf="isAdmin">Delete Group</button>
+          <button class="standardButton" (click)="saveResourceGroup()">Save</button>
+          <button class="warningButton" *ngIf="isAdmin" (click)="deleteResourceGroup()">Delete Group</button>
         </div>
       </div>
       <div *ngIf="editTab == 'roleTab'" class="roleList">
-        <div *ngIf="currentRole == null">
-          <button class="roleButton" (click)="currentRole = 'Owner'">Owner</button>
-          <button class="roleButton" (click)="currentRole = 'Admin'">Admin</button>
-          <button class="roleButton" (click)="currentRole = 'Member'">Member</button>
-          <button class="newRoleButton" (click)="currentRole = 'new'">Add New Role</button>
+        <div *ngIf="openRoleEditArea == false">
+          <button *ngFor="let role of groupRoles.groupRoles" class="roleButton" [disabled]="role.name == 'Owner' || role.name == 'Member'" (click)="openRoleEdit(role)">{{role.name}}</button>
+          <button class="newRoleButton" (click)="openRoleEdit(null)">Add New Role</button>
         </div>
-        <manage-role *ngIf="currentRole != null" [role]="currentRole"></manage-role>
+        <manage-role *ngIf="openRoleEditArea" [role]="currentRole" [groupId]="resourceGroup.id" (onClose)="onCloseRoleEdit(true)"></manage-role>
       </div>
     </div>
   </div>

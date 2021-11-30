@@ -1,5 +1,5 @@
-<h3 *ngIf="role != 'new'" style="color:black;margin-left:20px;">Manage Role Page: {{role}}</h3>
-<h3 *ngIf="role == 'new'" style="color:black;margin-left:20px;">Create New Role</h3>
+<h3 *ngIf="role != null" style="color:black;margin-left:20px;">Manage Role Page: {{role.name}}</h3>
+<h3 *ngIf="role == null" style="color:black;margin-left:20px;">Create New Role</h3>
 
 <h5 style="color:black;margin-left:20px;">Role Name</h5>
 <span class="p-float-label">
@@ -11,7 +11,7 @@
 </span>
 
 <div class="buttonNav">
-  <button *ngIf="role == 'new'" class="standardButton">Create</button>
-  <button *ngIf="role != 'new'" class="standardButton">Save</button>
-  <button *ngIf="role != 'new'" class="warningButton" [disabled]="role == 'Owner' || role == 'Member'">Delete Role</button>
+  <button *ngIf="role == null" class="standardButton" (click)="creatRole()">Create</button>
+  <button *ngIf="role != null" class="standardButton" (click)="updateRole()">Save</button>
+  <button *ngIf="role != null" class="warningButton" [disabled]="role.name == 'Owner' || role.name == 'Member'" (click)="RemoveRole()">Delete Role</button>
 </div>

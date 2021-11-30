@@ -24,12 +24,7 @@
     <Folder Include="Account\Commands\UpdateAccount\" />
     <Folder Include="GroupMember\DTOs\" />
     <Folder Include="GroupMember\Queries\" />
-    <Folder Include="Group\Commands\DeleteGroup\" />
-    <Folder Include="Group\Commands\UpdateGroup\" />
     <Folder Include="MySQLTable\Commands\UpdateTable\" />
-    <Folder Include="Role\Commands\DeleteRole\" />
-    <Folder Include="Role\Commands\UpdateRole\" />
-    <Folder Include="Role\Queries\" />
     <Folder Include="Tokens\Commands\DeleteToken\" />
     <Folder Include="Tokens\Queries\" />
   </ItemGroup>

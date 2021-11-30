@@ -26,6 +26,6 @@
     <input type="text" #phoneNumber placeholder="Phone (Not Required)"><br>
     <input type="password" #token placeholder="Token (Not Required)"><br>
     <input class="button" type="button" value="Back" (click)="routeRegister()">
-    <input class="button" type="button" value="Register" (click)="register(username.value, password.value, email.value, phoneNumber.value, token.value)">
+    <input class="button" type="button" value="Register" (click)="register(username.value, password.value, email.value, phoneNumber.value, token.value); registrationForm = false">
   </form>
 </div>

@@ -50,13 +50,13 @@ namespace CS_480_Project.Application.Group.Queries
 
                     if (ComputeSha256Hash(userId).CompareTo(request.UserUid) == 0)
                     {
+                        resourceGroups.ResourceGroups = new List<GroupDTO>();
                         do
                         {
                             GroupDTO newGroup = new GroupDTO();
                             newGroup.Id = results.GetString(1);
                             newGroup.Name = results.GetString(2);
                             newGroup.Description = results.GetString(3);
-                            resourceGroups.ResourceGroups = new List<GroupDTO>();
                             resourceGroups.ResourceGroups.Add(newGroup);
                         } while (results.Read());
 

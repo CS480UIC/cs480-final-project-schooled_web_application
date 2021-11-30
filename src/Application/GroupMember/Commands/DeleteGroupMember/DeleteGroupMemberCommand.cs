@@ -7,34 +7,29 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace CS_480_Project.Application.GroupMember.Commands.AddGroupMember
+namespace CS_480_Project.Application.GroupMember.Commands.DeleteGroupMember
 {
-    public class AddGroupMemberCommand : IRequest<int>
+    public class DeleteGroupMemberCommand : IRequest<int>
     {
-        public string GroupId { get; set; }
-        public string Token { get; set; }
+        public string Id { get; set; }
     }
 
-    public class AddGroupMemberCommandHandler : IRequestHandler<AddGroupMemberCommand, int>
+    public class DeleteGroupMemberCommandHandler : IRequestHandler<DeleteGroupMemberCommand, int>
     {
         private readonly IDatabaseService _dataBase;
-        public AddGroupMemberCommandHandler(IDatabaseService dataBase)
+        public DeleteGroupMemberCommandHandler(IDatabaseService dataBase)
         {
             _dataBase = dataBase;
         }
 
-        public async Task<int> Handle(AddGroupMemberCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(DeleteGroupMemberCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var UID = Guid.NewGuid().ToString();
-
                 _dataBase.CreateConnection("localhost", "schooled_web_application", "danie_test", "applecandykiller", "");
-                string sql = "INSERT INTO group_member (group_member_id, group_role_id, user_id) " +
-                    "VALUES(@val1, @val2, (SELECT user_id FROM token WHERE token.token_token ='" + request.Token + "'));";
+                string sql = " DELETE FROM group_member as member WHERE group_role_id = " +
+                    "(SELECT role.group_role_id FROM group_role as role WHERE role.group_role_id = member.group_role_id AND role.resource_group_id  = '" + request.Id + "');";
                 MySqlCommand cmd = new MySqlCommand(sql, _dataBase.GetConnection());
-                cmd.Parameters.AddWithValue("@val1", UID);
-                cmd.Parameters.AddWithValue("@val2", request.GroupId);
                 await _dataBase.ExecuteNonQueryStatement(cmd);
 
                 _dataBase.CloseConnection();

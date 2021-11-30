@@ -42,5 +42,5 @@
   </div>
   <div class="boarder position-ab right-0 top--10 z-index-0"></div>
 </div>
-<resource-group-add *ngIf="addDialog" (closeWindow)="addDialog = !$event"></resource-group-add>
-<resource-group *ngIf="currentResourceGroup != null" [resourceGroup]="currentResourceGroup" (eventUpdate)="currentResourceGroup = $event"></resource-group>
+<resource-group-add *ngIf="addDialog" (closeWindow)="closeAdd($event)"></resource-group-add>
+<resource-group *ngIf="currentResourceGroup != null" [resourceGroup]="currentResourceGroup" (eventUpdate)="closeUpdate($event)"></resource-group>

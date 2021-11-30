@@ -299,6 +299,8 @@ export class AccountsClient implements IAccountsClient {
 export interface IGroupsClient {
     create(token: string | null | undefined, command: CreateGroupCommand): Observable<number>;
     getGroupsByToken(command: GetGroupsByTokenCommand): Observable<GroupsDTO>;
+    updateGroup(command: UpdateGroupCommand): Observable<number>;
+    deleteGroup(command: DeleteGroupCommand): Observable<number>;
 }
 
 @Injectable({
@@ -418,6 +420,339 @@ export class GroupsClient implements IGroupsClient {
             }));
         }
         return _observableOf<GroupsDTO>(<any>null);
+    }
+
+    updateGroup(command: UpdateGroupCommand): Observable<number> {
+        let url_ = this.baseUrl + "/api/Groups/UpdateGroup";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateGroup(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateGroup(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateGroup(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(<any>null);
+    }
+
+    deleteGroup(command: DeleteGroupCommand): Observable<number> {
+        let url_ = this.baseUrl + "/api/Groups/DeleteGroup";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteGroup(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteGroup(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDeleteGroup(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(<any>null);
+    }
+}
+
+export interface IRolesClient {
+    create(command: CreateRoleCommand): Observable<GroupRoleDTO>;
+    getGroupsByGroupId(command: GetGroupRolesByGroupIdCommand): Observable<GroupRolesDTO>;
+    updateRole(command: UpdateRoleCommand): Observable<number>;
+    deleteRole(command: DeleteRoleByIdCommand): Observable<number>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class RolesClient implements IRolesClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    create(command: CreateRoleCommand): Observable<GroupRoleDTO> {
+        let url_ = this.baseUrl + "/api/Roles";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<GroupRoleDTO>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GroupRoleDTO>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<GroupRoleDTO> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GroupRoleDTO.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GroupRoleDTO>(<any>null);
+    }
+
+    getGroupsByGroupId(command: GetGroupRolesByGroupIdCommand): Observable<GroupRolesDTO> {
+        let url_ = this.baseUrl + "/api/Roles/GetGroupsByGroupId";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetGroupsByGroupId(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetGroupsByGroupId(<any>response_);
+                } catch (e) {
+                    return <Observable<GroupRolesDTO>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GroupRolesDTO>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetGroupsByGroupId(response: HttpResponseBase): Observable<GroupRolesDTO> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GroupRolesDTO.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GroupRolesDTO>(<any>null);
+    }
+
+    updateRole(command: UpdateRoleCommand): Observable<number> {
+        let url_ = this.baseUrl + "/api/Roles/UpdateRole";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateRole(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateRole(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateRole(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(<any>null);
+    }
+
+    deleteRole(command: DeleteRoleByIdCommand): Observable<number> {
+        let url_ = this.baseUrl + "/api/Roles/DeleteRole";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteRole(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteRole(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDeleteRole(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(<any>null);
     }
 }
 
@@ -1027,6 +1362,342 @@ export class GetGroupsByTokenCommand implements IGetGroupsByTokenCommand {
 export interface IGetGroupsByTokenCommand {
     userUid?: string | undefined;
     token?: string | undefined;
+}
+
+export class UpdateGroupCommand implements IUpdateGroupCommand {
+    id?: string | undefined;
+    name?: string | undefined;
+    privacyType?: number;
+    description?: string | undefined;
+    password?: string | undefined;
+
+    constructor(data?: IUpdateGroupCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.privacyType = _data["privacyType"];
+            this.description = _data["description"];
+            this.password = _data["password"];
+        }
+    }
+
+    static fromJS(data: any): UpdateGroupCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateGroupCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["privacyType"] = this.privacyType;
+        data["description"] = this.description;
+        data["password"] = this.password;
+        return data; 
+    }
+}
+
+export interface IUpdateGroupCommand {
+    id?: string | undefined;
+    name?: string | undefined;
+    privacyType?: number;
+    description?: string | undefined;
+    password?: string | undefined;
+}
+
+export class DeleteGroupCommand implements IDeleteGroupCommand {
+    id?: string | undefined;
+
+    constructor(data?: IDeleteGroupCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): DeleteGroupCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeleteGroupCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface IDeleteGroupCommand {
+    id?: string | undefined;
+}
+
+export class GroupRoleDTO implements IGroupRoleDTO {
+    id?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: IGroupRoleDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): GroupRoleDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new GroupRoleDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        return data; 
+    }
+}
+
+export interface IGroupRoleDTO {
+    id?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+}
+
+export class CreateRoleCommand implements ICreateRoleCommand {
+    groupId?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: ICreateRoleCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.groupId = _data["groupId"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): CreateRoleCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateRoleCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["groupId"] = this.groupId;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        return data; 
+    }
+}
+
+export interface ICreateRoleCommand {
+    groupId?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+}
+
+export class GroupRolesDTO implements IGroupRolesDTO {
+    groupRoles?: GroupRoleDTO[] | undefined;
+
+    constructor(data?: IGroupRolesDTO) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["groupRoles"])) {
+                this.groupRoles = [] as any;
+                for (let item of _data["groupRoles"])
+                    this.groupRoles!.push(GroupRoleDTO.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GroupRolesDTO {
+        data = typeof data === 'object' ? data : {};
+        let result = new GroupRolesDTO();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.groupRoles)) {
+            data["groupRoles"] = [];
+            for (let item of this.groupRoles)
+                data["groupRoles"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IGroupRolesDTO {
+    groupRoles?: GroupRoleDTO[] | undefined;
+}
+
+export class GetGroupRolesByGroupIdCommand implements IGetGroupRolesByGroupIdCommand {
+    groupId?: string | undefined;
+
+    constructor(data?: IGetGroupRolesByGroupIdCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.groupId = _data["groupId"];
+        }
+    }
+
+    static fromJS(data: any): GetGroupRolesByGroupIdCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetGroupRolesByGroupIdCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["groupId"] = this.groupId;
+        return data; 
+    }
+}
+
+export interface IGetGroupRolesByGroupIdCommand {
+    groupId?: string | undefined;
+}
+
+export class UpdateRoleCommand implements IUpdateRoleCommand {
+    roleId?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: IUpdateRoleCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.roleId = _data["roleId"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): UpdateRoleCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateRoleCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["roleId"] = this.roleId;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        return data; 
+    }
+}
+
+export interface IUpdateRoleCommand {
+    roleId?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+}
+
+export class DeleteRoleByIdCommand implements IDeleteRoleByIdCommand {
+    roleId?: string | undefined;
+
+    constructor(data?: IDeleteRoleByIdCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.roleId = _data["roleId"];
+        }
+    }
+
+    static fromJS(data: any): DeleteRoleByIdCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeleteRoleByIdCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["roleId"] = this.roleId;
+        return data; 
+    }
+}
+
+export interface IDeleteRoleByIdCommand {
+    roleId?: string | undefined;
 }
 
 export class CreateNewTableCommand implements ICreateNewTableCommand {

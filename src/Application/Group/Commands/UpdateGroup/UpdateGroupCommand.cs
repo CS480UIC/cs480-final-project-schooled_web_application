@@ -1,4 +1,5 @@
 ﻿using CS_480_Project.Application.Common.Interfaces;
+using CS_480_Project.Application.Group.DTOs;
 using MySql.Data.MySqlClient;
 using MediatR;
 using System.Threading;
@@ -7,34 +8,36 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace CS_480_Project.Application.GroupMember.Commands.AddGroupMember
+namespace CS_480_Project.Application.Group.Commands.UpdateGroup
 {
-    public class AddGroupMemberCommand : IRequest<int>
+    public class UpdateGroupCommand : IRequest<int>
     {
-        public string GroupId { get; set; }
-        public string Token { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public int PrivacyType { get; set; }
+        public string Description { get; set; }
+        public string Password { get; set; }
     }
 
-    public class AddGroupMemberCommandHandler : IRequestHandler<AddGroupMemberCommand, int>
+    public class UpdateGroupCommandHandler : IRequestHandler<UpdateGroupCommand, int>
     {
         private readonly IDatabaseService _dataBase;
-        public AddGroupMemberCommandHandler(IDatabaseService dataBase)
+        public UpdateGroupCommandHandler(IDatabaseService dataBase)
         {
             _dataBase = dataBase;
         }
 
-        public async Task<int> Handle(AddGroupMemberCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(UpdateGroupCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var UID = Guid.NewGuid().ToString();
+                var password = request.Password == null || request.Password.CompareTo("") == 0 ? null : ComputeSha256Hash(request.Password);
 
                 _dataBase.CreateConnection("localhost", "schooled_web_application", "danie_test", "applecandykiller", "");
-                string sql = "INSERT INTO group_member (group_member_id, group_role_id, user_id) " +
-                    "VALUES(@val1, @val2, (SELECT user_id FROM token WHERE token.token_token ='" + request.Token + "'));";
+                string sql = "UPDATE resource_group SET resource_group_name = '" + request.Name 
+                    + "', resource_group_description = '" + request.Description + "', resource_group_privacy_type ='" + request.PrivacyType + "', "
+                    + " resource_group_password='" + password + "' " + "WHERE resource_group_id = '" + request.Id + "';";
                 MySqlCommand cmd = new MySqlCommand(sql, _dataBase.GetConnection());
-                cmd.Parameters.AddWithValue("@val1", UID);
-                cmd.Parameters.AddWithValue("@val2", request.GroupId);
                 await _dataBase.ExecuteNonQueryStatement(cmd);
 
                 _dataBase.CloseConnection();
@@ -46,7 +49,7 @@ namespace CS_480_Project.Application.GroupMember.Commands.AddGroupMember
                 _dataBase.CloseConnection();
                 return -1;
             }
-
+            
         }
 
         static string ComputeSha256Hash(string rawData)
